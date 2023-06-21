@@ -1,11 +1,8 @@
-# Use a imagem oficial do Go como base
-FROM golang:1.18
+FROM golang:1.18 as builder
+WORKDIR /app
+COPY . .
+RUN go build -o main .
 
-# Copie o código fonte para dentro do container
-COPY main.go .
-
-# Compile o código
-RUN go build main.go
-
-# Defina o comando de inicialização do container
+FROM scratch
+COPY --from=builder /app/main .
 CMD ["./main"]
